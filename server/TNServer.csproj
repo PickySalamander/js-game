@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TNServer</RootNamespace>
     <AssemblyName>TNServer</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,6 +41,7 @@
     <DefineConstants>TRACE;DEBUG;STANDALONE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +50,7 @@
     <DefineConstants>TRACE;STANDALONE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -83,6 +86,9 @@
     <Compile Include="TNetTest\ServerMain.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ClearScript">
+      <HintPath>clearscript\ClearScript.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
   </ItemGroup>
@@ -103,4 +109,18 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="ClearScript\ClearScript.dll" />
+    <Content Include="ClearScript\ClearScript.XML" />
+    <Content Include="ClearScript\ClearScriptV8-32.dll" />
+    <Content Include="ClearScript\ClearScriptV8-64.dll" />
+    <Content Include="ClearScript\v8-ia32.dll" />
+    <Content Include="ClearScript\v8-x64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y $(ProjectDir)clearscript $(TargetDir)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
