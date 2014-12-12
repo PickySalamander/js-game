@@ -467,5 +467,7 @@ public enum Packet
 	/// </summary>
 
 	ForwardTargetNotFound,
+
+	RunJSCode
 }
 }

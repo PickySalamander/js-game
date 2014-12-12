@@ -22,8 +22,7 @@ using UnityTools = TNet.UnityTools;
 /// </summary>
 
 [ExecuteInEditMode]
-public class MainMenu : MonoBehaviour
-{
+public class MainMenu : MonoBehaviour {
 	const float buttonWidth = 150f;
 	const float buttonHeight = 40f;
 
@@ -43,10 +42,8 @@ public class MainMenu : MonoBehaviour
 	/// Start listening for incoming UDP packets right away.
 	/// </summary>
 
-	void Start ()
-	{
-		if (Application.isPlaying)
-		{
+	void Start() {
+		if(Application.isPlaying) {
 			// Start resolving IPs
 			Tools.ResolveIPs(null);
 
@@ -62,10 +59,8 @@ public class MainMenu : MonoBehaviour
 	/// Adjust the server list's alpha based on whether it should be shown or not.
 	/// </summary>
 
-	void Update ()
-	{
-		if (Application.isPlaying)
-		{
+	void Update() {
+		if(Application.isPlaying) {
 			float target = (TNLobbyClient.knownServers.list.size == 0) ? 0f : 1f;
 			mAlpha = UnityTools.SpringLerp(mAlpha, target, 8f, Time.deltaTime);
 		}
@@ -75,14 +70,11 @@ public class MainMenu : MonoBehaviour
 	/// Show the GUI for the examples.
 	/// </summary>
 
-	void OnGUI ()
-	{
-		if (!TNManager.isConnected)
-		{
+	void OnGUI() {
+		if(!TNManager.isConnected) {
 			DrawConnectMenu();
 		}
-		else
-		{
+		else {
 			DrawDisconnectButton();
 		}
 
@@ -93,8 +85,7 @@ public class MainMenu : MonoBehaviour
 	/// This menu is shown if the client has not yet connected to the server.
 	/// </summary>
 
-	void DrawConnectMenu ()
-	{
+	void DrawConnectMenu() {
 		Rect rect = new Rect(Screen.width * 0.5f - 200f * 0.5f - mAlpha * 120f,
 			Screen.height * 0.5f - 100f, 200f, 220f);
 
@@ -108,31 +99,26 @@ public class MainMenu : MonoBehaviour
 			GUILayout.Label("Server Address", text);
 			mAddress = GUILayout.TextField(mAddress, input, GUILayout.Width(200f));
 
-			if (GUILayout.Button("Connect", button))
-			{
+			if(GUILayout.Button("Connect", button)) {
 				// We want to connect to the specified destination when the button is clicked on.
 				// "OnNetworkConnect" function will be called sometime later with the result.
 				TNManager.Connect(mAddress);
 				mMessage = "Connecting...";
 			}
 
-			if (TNServerInstance.isActive)
-			{
+			if(TNServerInstance.isActive) {
 				GUI.backgroundColor = Color.red;
 
-				if (GUILayout.Button("Stop the Server", button))
-				{
+				if(GUILayout.Button("Stop the Server", button)) {
 					// Stop the server, saving all the data
 					TNServerInstance.Stop("server.dat");
 					mMessage = "Server stopped";
 				}
 			}
-			else
-			{
+			else {
 				GUI.backgroundColor = Color.green;
 
-				if (GUILayout.Button("Start a Local Server", button))
-				{
+				if(GUILayout.Button("Start a Local Server", button)) {
 #if UNITY_WEBPLAYER
 					mMessage = "Can't host from the Web Player due to Unity's security restrictions";
 #else
@@ -142,12 +128,10 @@ public class MainMenu : MonoBehaviour
 					int udpPort = Random.Range(10000, 40000);
 					TNLobbyClient lobby = GetComponent<TNLobbyClient>();
 
-					if (lobby == null)
-					{
+					if(lobby == null) {
 						TNServerInstance.Start(serverTcpPort, udpPort, "server.dat");
 					}
-					else
-					{
+					else {
 						TNServerInstance.Type type = (lobby is TNUdpLobbyClient) ?
 							TNServerInstance.Type.Udp : TNServerInstance.Type.Tcp;
 						TNServerInstance.Start(serverTcpPort, udpPort, lobby.remotePort, "server.dat", type);
@@ -158,12 +142,11 @@ public class MainMenu : MonoBehaviour
 			}
 			GUI.backgroundColor = Color.white;
 
-			if (!string.IsNullOrEmpty(mMessage)) GUILayout.Label(mMessage, text);
+			if(!string.IsNullOrEmpty(mMessage)) GUILayout.Label(mMessage, text);
 		}
 		GUILayout.EndArea();
 
-		if (mAlpha > 0.01f)
-		{
+		if(mAlpha > 0.01f) {
 			rect.x = rect.x + (Screen.width - rect.xMin - rect.xMax) * mAlpha;
 			DrawServerList(rect);
 		}
@@ -177,15 +160,14 @@ public class MainMenu : MonoBehaviour
 	/// You can call TNManager.JoinChannel here if you like, but in this example we let the player choose.
 	/// </summary>
 
-	void OnNetworkConnect (bool success, string message) { mMessage = message; }
+	void OnNetworkConnect(bool success, string message) { mMessage = message; }
 
 	/// <summary>
 	/// We want to return to the menu when we leave the channel.
 	/// This message is also sent out when we get disconnected.
 	/// </summary>
 
-	void OnNetworkLeaveChannel ()
-	{
+	void OnNetworkLeaveChannel() {
 		Application.LoadLevel(mainMenu);
 	}
 
@@ -193,34 +175,45 @@ public class MainMenu : MonoBehaviour
 	/// The disconnect button is only shown if we are currently connected.
 	/// </summary>
 
-	void DrawDisconnectButton ()
-	{
-		Rect rect = new Rect(Screen.width - buttonWidth, Screen.height - buttonHeight, buttonWidth, buttonHeight);
+	void DrawDisconnectButton() {
+		Rect rect = new Rect(Screen.width * 0.5f - 200f * 0.5f - mAlpha * 120f, Screen.height * 0.5f - 100f, 200f, 220f);
 
-		if (GUI.Button(rect, "Disconnect", button))
+		// Show a half-transparent box around the upcoming UI
+		GUI.color = new Color(1f, 1f, 1f, 0.5f);
+		GUI.Box(UnityTools.PadRect(rect, 8f), "");
+		GUI.color = Color.white;
+
+		GUILayout.BeginArea(rect);
 		{
-			// Disconnecting while in some channel will cause "OnNetworkLeaveChannel" to be sent out first,
-			// followed by "OnNetworkDisconnect". Disconnecting while not in a channel will only trigger
-			// "OnNetworkDisconnect".
-			TNManager.Disconnect();
+			if(GUILayout.Button("Send Test", button)) {
+				BinaryWriter writer = TNManager.BeginSend(Packet.RunJSCode);
+				writer.Write("Console.WriteLine(\"It worked!\");");
+				TNManager.EndSend(true);
+			}
+
+			if(GUILayout.Button("Disconnect", button)) {
+				// Disconnecting while in some channel will cause "OnNetworkLeaveChannel" to be sent out first,
+				// followed by "OnNetworkDisconnect". Disconnecting while not in a channel will only trigger
+				// "OnNetworkDisconnect".
+				TNManager.Disconnect();
+			}
 		}
+		GUILayout.EndArea();
 	}
 
 	/// <summary>
 	/// Print some additional information such as ping and which type of connection this is.
 	/// </summary>
 
-	void DrawDebugInfo ()
-	{
+	void DrawDebugInfo() {
 		GUILayout.Label("LAN: " + Tools.localAddress.ToString(), textLeft);
 
-		if (Application.isPlaying)
-		{
-			if (Tools.isExternalIPReliable)
+		if(Application.isPlaying) {
+			if(Tools.isExternalIPReliable)
 				GUILayout.Label("WAN: " + Tools.externalAddress, textLeft);
 			else GUILayout.Label("WAN: Resolving...", textLeft);
 
-			if (TNManager.isConnected)
+			if(TNManager.isConnected)
 				GUILayout.Label("Ping: " + TNManager.ping + " (" + (TNManager.canUseUDP ? "TCP+UDP" : "TCP") + ")", textLeft);
 		}
 	}
@@ -229,8 +222,7 @@ public class MainMenu : MonoBehaviour
 	/// Draw the list of known LAN servers.
 	/// </summary>
 
-	void DrawServerList (Rect rect)
-	{
+	void DrawServerList(Rect rect) {
 		GUI.color = new Color(1f, 1f, 1f, mAlpha * mAlpha * 0.5f);
 		GUI.Box(UnityTools.PadRect(rect, 8f), "");
 		GUI.color = new Color(1f, 1f, 1f, mAlpha * mAlpha);
@@ -243,14 +235,12 @@ public class MainMenu : MonoBehaviour
 			List<ServerList.Entry> list = TNLobbyClient.knownServers.list;
 
 			// Server list example script automatically collects servers that have recently announced themselves
-			for (int i = 0; i < list.size; ++i)
-			{
+			for(int i = 0; i < list.size; ++i) {
 				ServerList.Entry ent = list[i];
 
 				// NOTE: I am using 'internalAddress' here because I know all servers are hosted on LAN.
 				// If you are hosting outside of your LAN, you should probably use 'externalAddress' instead.
-				if (GUILayout.Button(ent.internalAddress.ToString(), button))
-				{
+				if(GUILayout.Button(ent.internalAddress.ToString(), button)) {
 					TNManager.Connect(ent.internalAddress, ent.internalAddress);
 					mMessage = "Connecting...";
 				}
