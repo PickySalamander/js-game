@@ -187,7 +187,7 @@ public class MainMenu : MonoBehaviour {
 		{
 			if(GUILayout.Button("Send Test", button)) {
 				BinaryWriter writer = TNManager.BeginSend(Packet.RunJSCode);
-				writer.Write("Console.WriteLine(\"It worked!\");");
+				writer.Write("Console.WriteLine(\"It worked! \" + Math.round(7 + 2));");
 				TNManager.EndSend(true);
 			}
 
