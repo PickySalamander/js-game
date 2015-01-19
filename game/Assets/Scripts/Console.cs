@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Console : MonoBehaviour {
+public class Console : SingletonBehavior<Console> {
 	public string[] startupStrs = new string[] {
 		"Picky Console (version 1.0)",
 		"Copyright (C) 2015 PickySalamander Electronics",
 		"",
 		"",
-		"Starting console now..."
+		"Looking for server..."
 	};
 
 	public UILabel output;
