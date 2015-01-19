@@ -468,6 +468,8 @@ public enum Packet
 
 	ForwardTargetNotFound,
 
-	RunJSCode
+	RunJSCode,
+
+	JSCodeResult
 }
 }

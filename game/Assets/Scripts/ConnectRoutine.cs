@@ -26,6 +26,8 @@ public class ConnectRoutine : TaskRunner {
 				if(TNManager.isConnected) {
 					Finished();
 					Console.Instance.addToConsole("Connected!");
+
+					Console.Instance.input.isSelected = true;
 				}
 				else {
 					Console.Instance.addToConsole("Failed to connect, check log!");

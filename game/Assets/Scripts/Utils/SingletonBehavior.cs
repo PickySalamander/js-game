@@ -25,9 +25,11 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour {
 
 			lock(_lock) {
 				if(_instance == null) {
-					_instance = (T) FindObjectOfType(typeof(T));
+					T[] instances = (T[]) FindObjectsOfType(typeof(T));
 
-					if(FindObjectsOfType(typeof(T)).Length > 1) {
+					_instance = instances.Length > 0 ? instances[0] : null;
+
+					if(instances.Length > 1) {
 						Debug.LogError("[Singleton] Something went really wrong " +
 							" - there should never be more than 1 singleton!" +
 							" Reopenning the scene might fix it.");
@@ -40,14 +42,6 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour {
 						singleton.name = "(singleton) " + typeof(T).ToString();
 
 						DontDestroyOnLoad(singleton);
-
-						Debug.Log("[Singleton] An instance of " + typeof(T) +
-							" is needed in the scene, so '" + singleton +
-							"' was created with DontDestroyOnLoad.");
-					}
-					else {
-						Debug.Log("[Singleton] Using instance already created: " +
-							_instance.gameObject.name);
 					}
 				}
 
@@ -57,6 +51,8 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour {
 	}
 
 	private static bool applicationIsQuitting = false;
+
+
 	/// <summary>
 	/// When Unity quits, it destroys objects in a random order.
 	/// In principle, a Singleton is only destroyed when application quits.
@@ -65,7 +61,11 @@ public class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour {
 	///   even after stopping playing the Application. Really bad!
 	/// So, this was made to be sure we're not creating that buggy ghost object.
 	/// </summary>
-	public void OnDestroy() {
+	private void OnApplicationQuit() {
 		applicationIsQuitting = true;
+	}
+
+	private void OnDestroy() {
+		_instance = null;
 	}
 }

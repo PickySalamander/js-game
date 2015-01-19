@@ -466,6 +466,8 @@ namespace TNet {
 
 		ForwardTargetNotFound,
 
-		RunJSCode
+		RunJSCode,
+
+		JSCodeResult
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using TNet;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
+using System.IO;
 
 namespace PickySalamander.JSServer {
 	public class JSServeEngine {
@@ -19,12 +21,13 @@ namespace PickySalamander.JSServer {
 			engine.Dispose();
 		}
 
-		public void Execute(string command) {
+		public string Execute(string command) {
 			try {
-				engine.Execute(command);
+				object result = engine.Evaluate(command);
+				return result.ToString();
 			}
 			catch(Exception e) {
-				Console.WriteLine("Error running JS code ( \"" + command + "\" ): " + e.ToString());
+				return "Error running JS code ( \"" + command + "\" ): " + e.ToString();
 			}
 		}
 	}

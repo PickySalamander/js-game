@@ -570,7 +570,7 @@ public class GameServer : FileServer
 	/// Start the sending process.
 	/// </summary>
 
-	BinaryWriter BeginSend (Packet type)
+	public BinaryWriter BeginSend (Packet type)
 	{
 		mBuffer = Buffer.Create();
 		BinaryWriter writer = mBuffer.BeginPacket(type);
@@ -581,7 +581,7 @@ public class GameServer : FileServer
 	/// Send the outgoing buffer to the specified remote destination.
 	/// </summary>
 
-	void EndSend (IPEndPoint ip)
+	public void EndSend(IPEndPoint ip)
 	{
 		mBuffer.EndPacket();
 		mUdp.Send(mBuffer, ip);
@@ -593,7 +593,7 @@ public class GameServer : FileServer
 	/// Send the outgoing buffer to the specified player.
 	/// </summary>
 
-	void EndSend (bool reliable, TcpPlayer player)
+	public void EndSend(bool reliable, TcpPlayer player)
 	{
 		mBuffer.EndPacket();
 		if (mBuffer.size > 1024) reliable = true;
@@ -612,7 +612,7 @@ public class GameServer : FileServer
 	/// Send the outgoing buffer to all players in the specified channel.
 	/// </summary>
 
-	void EndSend (bool reliable, Channel channel, TcpPlayer exclude)
+	public void EndSend(bool reliable, Channel channel, TcpPlayer exclude)
 	{
 		mBuffer.EndPacket();
 		if (mBuffer.size > 1024) reliable = true;
@@ -639,7 +639,7 @@ public class GameServer : FileServer
 	/// Send the outgoing buffer to all connected players.
 	/// </summary>
 
-	void EndSend (bool reliable)
+	public void EndSend(bool reliable)
 	{
 		mBuffer.EndPacket();
 		if (mBuffer.size > 1024) reliable = true;

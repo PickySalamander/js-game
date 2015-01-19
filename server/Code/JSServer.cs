@@ -14,6 +14,9 @@ namespace PickySalamander.JSServer {
 	public class JSServer {
 		private JSServeEngine engine;
 
+		private GameServer gameServer = null;
+		private LobbyServer lobbyServer = null;
+
 		/// <summary>
 		/// Start the server.
 		/// </summary>
@@ -43,9 +46,6 @@ namespace PickySalamander.JSServer {
 
 				Console.WriteLine("External IP: " + Tools.externalAddress);
 				Console.WriteLine("");
-
-				GameServer gameServer = null;
-				LobbyServer lobbyServer = null;
 
 				if(tcpPort > 0) {
 					gameServer = new GameServer();
@@ -149,7 +149,11 @@ namespace PickySalamander.JSServer {
 			switch(request) {
 				case Packet.RunJSCode:
 					string jsCode = reader.ReadString();
-					engine.Execute(jsCode);
+					string result = engine.Execute(jsCode);
+
+					BinaryWriter writer = gameServer.BeginSend(Packet.JSCodeResult);
+					writer.Write(result);
+					gameServer.EndSend(true, player);
 					break;
 			}
 		}
