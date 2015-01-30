@@ -38,4 +38,4 @@ _ReSharper*/
 Library
 Temp
 .project
-
+*.dat

@@ -6,6 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/TNet/Examples/Scenes/Example Menu.unity
+  - enabled: 1
     path: Assets/TNet/Examples/Scenes/Example 1.unity
   - enabled: 1
     path: Assets/TNet/Examples/Scenes/Example 2.unity
@@ -17,7 +19,5 @@ EditorBuildSettings:
     path: Assets/TNet/Examples/Scenes/Example AutoSync.unity
   - enabled: 1
     path: Assets/TNet/Examples/Scenes/Example Chat.unity
-  - enabled: 1
-    path: Assets/TNet/Examples/Scenes/Example Menu.unity
   - enabled: 1
     path: Assets/TNet/Examples/Scenes/Example Stress Test.unity

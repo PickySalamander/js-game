@@ -14,10 +14,8 @@ public class Console : SingletonBehavior<Console> {
 		"Looking for server..."
 	};
 
-	public UILabel output;
+	public UITextList output;
 	public UIInput input;
-
-	//TODO find collider
 
 	private Queue<string> buffer = new Queue<string>();
 
@@ -46,12 +44,7 @@ public class Console : SingletonBehavior<Console> {
 	private void Update() {
 		while(buffer.Count != 0) {
 			string elem = buffer.Dequeue();
-
-			if(output.text.Length > 0) {
-				elem = "\n" + elem;
-			}
-
-			output.text += elem;
+			output.Add(elem);
 		}
 
 		input.collider.enabled = TNManager.isConnected;
