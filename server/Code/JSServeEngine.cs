@@ -1,8 +1,6 @@
-﻿using System;
-using TNet;
-using Microsoft.ClearScript;
-using Microsoft.ClearScript.V8;
-using System.IO;
+﻿using Microsoft.ClearScript.V8;
+using PickySalamander.JSServer.Code;
+using System;
 
 namespace PickySalamander.JSServer {
 	public class JSServeEngine {
@@ -28,6 +26,15 @@ namespace PickySalamander.JSServer {
 			}
 			catch(Exception e) {
 				return "Error running JS code ( \"" + command + "\" ): " + e.ToString();
+			}
+		}
+
+		public void AddFunction(JSFuncCallback func) {
+			try {
+				engine.Script[func.name] = func;
+			}
+			catch(Exception e) {
+				Console.WriteLine("Unable to add to engine: " + e.ToString());
 			}
 		}
 	}

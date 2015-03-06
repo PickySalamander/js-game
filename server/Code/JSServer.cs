@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Net;
+using PickySalamander.JSServer.Code;
 
 namespace PickySalamander.JSServer {
 	/// <summary>
@@ -147,13 +148,20 @@ namespace PickySalamander.JSServer {
 
 		private void OnCustomPacket(TcpPlayer player, TNet.Buffer buffer, BinaryReader reader, Packet request, bool reliable) {
 			switch(request) {
-				case Packet.RunJSCode:
+				case Packet.RequestRunScript:
 					string jsCode = reader.ReadString();
 					string result = engine.Execute(jsCode);
 
-					BinaryWriter writer = gameServer.BeginSend(Packet.JSCodeResult);
+					BinaryWriter writer = gameServer.BeginSend(Packet.ResponseRunScript);
 					writer.Write(result);
 					gameServer.EndSend(true, player);
+					break;
+				case Packet.RequestAddFunction:
+					string functionName = reader.ReadString();
+					Guid id = new Guid(reader.ReadBytes(16));
+
+					engine.AddFunction(new JSFuncCallback(id, functionName));
+					
 					break;
 			}
 		}

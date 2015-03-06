@@ -27,7 +27,7 @@ public class Console : SingletonBehavior<Console> {
 
 		input.onSubmit.Add(new EventDelegate(OnSubmit));
 
-		TNManager.SetPacketHandler(Packet.JSCodeResult, OnResult);
+		TNManager.SetPacketHandler(Packet.ResponseRunScript, OnResult);
 	}
 
 	public void addToConsole(IEnumerable<string> strs) {
@@ -55,7 +55,7 @@ public class Console : SingletonBehavior<Console> {
 
 		input.value = "";
 
-		BinaryWriter writer = TNManager.BeginSend(Packet.RunJSCode);
+		BinaryWriter writer = TNManager.BeginSend(Packet.RequestRunScript);
 		writer.Write(text);
 		TNManager.EndSend(true);
 	}

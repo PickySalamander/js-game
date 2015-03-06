@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using TNet;
+using System.IO;
+using System;
 
 public class ConnectRoutine : TaskRunner {
 	private void Awake() {
@@ -26,6 +28,15 @@ public class ConnectRoutine : TaskRunner {
 				if(TNManager.isConnected) {
 					Finished();
 					Console.Instance.addToConsole("Connected!");
+
+					BinaryWriter writer = TNManager.BeginSend(Packet.RequestAddFunction);
+					writer.Write("testObj");
+
+					Guid id = Guid.NewGuid();
+					Debug.Log("GUID: " + id.ToString());
+
+					writer.Write(id.ToByteArray());
+					TNManager.EndSend(true);
 
 					Console.Instance.input.isSelected = true;
 				}

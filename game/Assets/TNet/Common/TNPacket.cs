@@ -9,6 +9,7 @@ namespace TNet {
 	/// </summary>
 
 	public enum Packet {
+		#region NGUI's Packets
 		/// <summary>
 		/// Empty packet. Can be used to keep the connection alive.
 		/// </summary>
@@ -466,8 +467,18 @@ namespace TNet {
 
 		ForwardTargetNotFound,
 
-		RunJSCode,
+		#endregion
 
-		JSCodeResult
+		#region PickyPackets
+
+		RequestAddFunction,
+
+		RequestRunScript,
+
+		ResponseAddFunction,
+
+		ResponseRunScript
+
+		#endregion
 	}
 }
